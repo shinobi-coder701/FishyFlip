@@ -7,7 +7,7 @@ namespace FishyFlip.Models;
 public class Subject
 {
     [JsonConstructor]
-    public Subject(Cid? cid, AtUri? uri)
+    public Subject(Cid? cid, ATUri? uri)
     {
         this.Cid = cid;
         this.Uri = uri;
@@ -15,5 +15,5 @@ public class Subject
 
     public Cid? Cid { get; }
 
-    public AtUri? Uri { get; }
+    public ATUri? Uri { get; }
 }
