@@ -315,3 +315,4 @@ __pycache__/
 # Mobile.BuildTools
 secrets.json
 secrets.*.json
+config.bat
