@@ -17,22 +17,34 @@ namespace FishyFlip.Lexicon.Tools.Ozone.Moderation
         /// Initializes a new instance of the <see cref="AgeAssuranceEvent"/> class.
         /// </summary>
         /// <param name="createdAt">The date and time of this write operation.</param>
-        /// <param name="status">The status of the age assurance process.
+        /// <param name="attemptId">The unique identifier for this instance of the age assurance flow, in UUID format.</param>
+        /// <param name="status">The status of the Age Assurance process.
         /// <br/> Known Values: <br/>
         /// unknown <br/>
         /// pending <br/>
         /// assured <br/>
         /// </param>
-        /// <param name="attemptId">The unique identifier for this instance of the age assurance flow, in UUID format.</param>
+        /// <param name="access">
+        /// <br/> Known Values: <br/>
+        /// unknown <br/>
+        /// none <br/>
+        /// safe <br/>
+        /// full <br/>
+        /// </param>
+        /// <param name="countryCode">The ISO 3166-1 alpha-2 country code provided when beginning the Age Assurance flow.</param>
+        /// <param name="regionCode">The ISO 3166-2 region code provided when beginning the Age Assurance flow.</param>
         /// <param name="initIp">The IP address used when initiating the AA flow.</param>
         /// <param name="initUa">The user agent used when initiating the AA flow.</param>
         /// <param name="completeIp">The IP address used when completing the AA flow.</param>
         /// <param name="completeUa">The user agent used when completing the AA flow.</param>
-        public AgeAssuranceEvent(DateTime? createdAt = default, string status = default, string attemptId = default, string? initIp = default, string? initUa = default, string? completeIp = default, string? completeUa = default)
+        public AgeAssuranceEvent(DateTime? createdAt = default, string attemptId = default, string status = default, string? access = default, string? countryCode = default, string? regionCode = default, string? initIp = default, string? initUa = default, string? completeIp = default, string? completeUa = default)
         {
             this.CreatedAt = createdAt ?? DateTime.UtcNow;
-            this.Status = status;
             this.AttemptId = attemptId;
+            this.Status = status;
+            this.Access = access;
+            this.CountryCode = countryCode;
+            this.RegionCode = regionCode;
             this.InitIp = initIp;
             this.InitUa = initUa;
             this.CompleteIp = completeIp;
@@ -56,8 +68,11 @@ namespace FishyFlip.Lexicon.Tools.Ozone.Moderation
         public AgeAssuranceEvent(CBORObject obj)
         {
             if (obj["createdAt"] is not null) this.CreatedAt = obj["createdAt"].ToDateTime();
-            if (obj["status"] is not null) this.Status = obj["status"].AsString();
             if (obj["attemptId"] is not null) this.AttemptId = obj["attemptId"].AsString();
+            if (obj["status"] is not null) this.Status = obj["status"].AsString();
+            if (obj["access"] is not null) this.Access = obj["access"].AsString();
+            if (obj["countryCode"] is not null) this.CountryCode = obj["countryCode"].AsString();
+            if (obj["regionCode"] is not null) this.RegionCode = obj["regionCode"].AsString();
             if (obj["initIp"] is not null) this.InitIp = obj["initIp"].AsString();
             if (obj["initUa"] is not null) this.InitUa = obj["initUa"].AsString();
             if (obj["completeIp"] is not null) this.CompleteIp = obj["completeIp"].AsString();
@@ -74,8 +89,16 @@ namespace FishyFlip.Lexicon.Tools.Ozone.Moderation
         public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
 
         /// <summary>
+        /// Gets or sets the attemptId.
+        /// <br/> The unique identifier for this instance of the age assurance flow, in UUID format.
+        /// </summary>
+        [JsonPropertyName("attemptId")]
+        [JsonRequired]
+        public string AttemptId { get; set; }
+
+        /// <summary>
         /// Gets or sets the status.
-        /// <br/> The status of the age assurance process.
+        /// <br/> The status of the Age Assurance process.
         /// <br/> Known Values: <br/>
         /// unknown <br/>
         /// pending <br/>
@@ -86,12 +109,32 @@ namespace FishyFlip.Lexicon.Tools.Ozone.Moderation
         public string Status { get; set; }
 
         /// <summary>
-        /// Gets or sets the attemptId.
-        /// <br/> The unique identifier for this instance of the age assurance flow, in UUID format.
+        /// Gets or sets the access.
+        /// <br/> Known Values: <br/>
+        /// unknown <br/>
+        /// none <br/>
+        /// safe <br/>
+        /// full <br/>
         /// </summary>
-        [JsonPropertyName("attemptId")]
-        [JsonRequired]
-        public string AttemptId { get; set; }
+        [JsonPropertyName("access")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? Access { get; set; }
+
+        /// <summary>
+        /// Gets or sets the countryCode.
+        /// <br/> The ISO 3166-1 alpha-2 country code provided when beginning the Age Assurance flow.
+        /// </summary>
+        [JsonPropertyName("countryCode")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? CountryCode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the regionCode.
+        /// <br/> The ISO 3166-2 region code provided when beginning the Age Assurance flow.
+        /// </summary>
+        [JsonPropertyName("regionCode")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? RegionCode { get; set; }
 
         /// <summary>
         /// Gets or sets the initIp.
